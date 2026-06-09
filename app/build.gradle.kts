@@ -7,6 +7,7 @@ alias(libs.plugins.secrets)
 
 android {
 namespace = "com.aistudio.lensorastudio.xkydq"
+
 compileSdk = 35
 
 defaultConfig {
@@ -49,6 +50,12 @@ buildFeatures {
 
 composeOptions {
     kotlinCompilerExtensionVersion = "1.5.14"
+}
+
+testOptions {
+    unitTests {
+        isIncludeAndroidResources = true
+    }
 }
 
 }
