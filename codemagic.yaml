@@ -1,40 +1,52 @@
-# Codemagic CI Build Pipeline Configuration
-# Dedicated for automated Android Release/Debug Packaging
-
 workflows:
   lensora-build-pipeline:
     name: Lensora Studio X Compilation
-    max_build_duration: 30
+    max_build_duration: 60
+
     instance_type: mac_mini_m1
+
     environment:
+      java: 17
       groups:
         - keystore_credentials
       vars:
         PACKAGE_NAME: "com.aistudio.lensorastudio.xkydq"
-        JAVA_VERSION: "17"
+
     triggering:
       events:
         - push
         - pull_request
       branch_patterns:
-        - pattern: 'main'
+        - pattern: main
           include: true
-        - pattern: 'master'
+        - pattern: master
           include: true
+
     scripts:
-      - name: Initialize environment details
-        script: | 
-          echo "Building Lensora Studio X Client Offline Tool Suite"
-          java -version
-      - name: Build Debug Android Package (APK)
+      - name: Checkout
         script: |
-          gradle assembleDebug
-      - name: Build Release Bundle (AAB)
+          echo "Starting Lensora Studio X CI Build..."
+
+      - name: Grant permissions
         script: |
-          gradle bundleRelease
+          chmod +x gradlew
+
+      - name: Clean project
+        script: |
+          ./gradlew clean
+
+      - name: Build Debug APK
+        script: |
+          ./gradlew assembleDebug --stacktrace
+
+      - name: Build Release AAB
+        script: |
+          ./gradlew bundleRelease --stacktrace
+
     artifacts:
       - app/build/outputs/apk/**/*.apk
       - app/build/outputs/bundle/**/*.aab
+
     publishing:
       email:
         recipients:
