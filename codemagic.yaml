@@ -7,25 +7,16 @@ workflows:
 
     environment:
       java: 17
-      groups:
-        - keystore_credentials
-      vars:
-        PACKAGE_NAME: "com.aistudio.lensorastudio.xkydq"
-
-    triggering:
-      events:
-        - push
-        - pull_request
-      branch_patterns:
-        - pattern: main
-          include: true
-        - pattern: master
-          include: true
 
     scripts:
-      - name: Checkout
+      - name: Verify project files
         script: |
-          echo "Starting Lensora Studio X CI Build..."
+          echo "Checking project..."
+          ls -la
+
+      - name: Generate Gradle Wrapper
+        script: |
+          gradle wrapper --gradle-version 8.7
 
       - name: Grant permissions
         script: |
@@ -44,8 +35,8 @@ workflows:
           ./gradlew bundleRelease --stacktrace
 
     artifacts:
-      - app/build/outputs/apk/**/*.apk
-      - app/build/outputs/bundle/**/*.aab
+      - app/build/outputs/**/*.apk
+      - app/build/outputs/**/*.aab
 
     publishing:
       email:
